@@ -5,7 +5,7 @@ ARG ROS_SOURCES="http://packages.ros.org/ros/ubuntu"
 
 # Use apt-cacher container
 # NOTE: Requires that apt-cacher server was started before build.
-RUN echo 'Acquire::http { Proxy "http://172.17.42.1:3142"; };' >> /etc/apt/apt.conf.d/01proxy
+RUN echo 'Acquire::http { Proxy "http://172.17.0.1:3142"; };' >> /etc/apt/apt.conf.d/01proxy
 
 # Install ROS
 RUN apt-get -qq update && \
@@ -55,7 +55,7 @@ ENV PATH=/home/ros/devel/bin:/opt/ros/indigo/bin:.:/usr/local/sbin:/usr/local/bi
     ROS_PACKAGE_PATH=/home/ros/src:/opt/ros/indigo/share:/opt/ros/indigo/stacks \
     CMAKE_PREFIX_PATH=/home/ros/indigo/catkin_ws/devel:/opt/ros/indigo \
     PKG_CONFIG_PATH=/home/ros/devel/lib/pkgconfig:/opt/ros/indigo/lib/pkgconfig \
-    ROS_MASTER_URI=http://localhost:11311 \
+    ROS_MASTER_URI=http://192.168.101.123:11311 \
     ROS_MAVEN_DEPLOYMENT_REPOSITORY=/home/ros/devel/share/maven \
     ROS_MAVEN_PATH=/home/ros/devel/share/maven:/opt/ros/indigo/share/maven \
     ROS_WORKSPACE=/home/ros \
@@ -66,15 +66,15 @@ ENV PATH=/home/ros/devel/bin:/opt/ros/indigo/bin:.:/usr/local/sbin:/usr/local/bi
 
 # Use nexus server that mirrors maven central and ROS repository.
 # NOTE: Requires that nexus server was started before build.
-ENV ROS_MAVEN_REPOSITORY http://172.17.42.1:8081/nexus/content/groups/public
+ENV ROS_MAVEN_REPOSITORY http://172.17.0.1:8081/nexus/content/groups/public
 # Configure maven to use the nexus server
 RUN mkdir -p /home/ros/.m2
 ADD mvn-settings.xml /home/ros/.m2/settings.xml
 
 # Configuration of links and volumes
 # TODO: Mount mesh_data read only. Note: Meshes can be generated in knowrob_vis and saved in mesh_data 
-ENV DOCKER_LINKS mongo_db:mongo \
-    DOCKER_VOLUMES episode_data:ro mesh_data
+ENV DOCKER_LINKS mongo_db:mongo
+ENV DOCKER_VOLUMES episode_data:ro mesh_data
 
 # Forward ports: webserver + rosbridge
 EXPOSE 1111 9090

@@ -8,7 +8,7 @@ apt_cacher_wait () {
    X=""
    while [ Y"$X" = Y"" ]; do
        sleep 1
-       X=`curl -g -s http://172.17.42.1:3142`
+       X=`curl -g -s http://172.17.0.1:3142`
    done
 }
 
