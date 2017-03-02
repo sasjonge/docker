@@ -90,3 +90,7 @@ echo "Test"
 echo "Building openease/indigo-knowrob-daemon....";
 docker build -t openease/indigo-knowrob-daemon .
 
+# Build the meshes of pepper
+docker run --name tmppep --add-host sascha-E5450:192.168.101.123 -i openease/indigo-knowrob-daemon /home/pepper.sh
+docker commit tmppep openease/indigo-knowrob-daemon
+docker rm tmppep
